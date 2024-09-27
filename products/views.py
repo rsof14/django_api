@@ -14,17 +14,18 @@ class ProductsAPIView(APIView):
 
     def get(self, request):
         products = Product.objects.all()
-        return Response(data={'products': ProductSerializer(products, many=True).data}, status=status.HTTP_200_OK)
+        return Response(
+            data={'products': ProductSerializer(products, many=True).data},
+            status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(data={'product': serializer.data}, status=status.HTTP_201_CREATED)
+            return Response(data={'product': serializer.data},
+                            status=status.HTTP_201_CREATED)
         except ValidationError:
-            return JsonResponse({'message': 'Название продукта должно быть уникальным'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
+            return JsonResponse({
+                'message': 'Название продукта должно быть уникальным'},
+                status=status.HTTP_400_BAD_REQUEST)
